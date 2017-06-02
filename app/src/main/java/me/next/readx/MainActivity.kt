@@ -5,17 +5,27 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import io.reactivex.android.schedulers.AndroidSchedulers
-import me.next.readx.network.DataLayer
-import me.next.readx.network.services.OpenEyeService
-import org.jetbrains.anko.toast
+import kotlinx.android.synthetic.main.content_main.*
+import me.next.readx.base.BaseActivity
+import me.next.readx.base.BaseContentAdapter
+import me.next.readx.openeye.Contract
+import me.next.readx.openeye.OpenEyePresenter
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BaseActivity(), Contract.View, NavigationView.OnNavigationItemSelectedListener {
+
+    var presenter: Contract.Presenter? = null
+
+    override fun setAdapter(adapter: BaseContentAdapter<*>?) {
+        recyclerView.adapter = adapter
+    }
+
+    override fun onCreatePresenter(presenterFactory: PresenterFactory) {
+        presenter = presenterFactory.createOrGet(OpenEyePresenter::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,25 +42,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val navigationView = findViewById(R.id.nav_view) as NavigationView
         navigationView.setNavigationItemSelectedListener(this)
 
-        DataLayer.init()
-        OpenEyeService.getOpenEyeList()
-                .observeOn(AndroidSchedulers.mainThread())
-                .map {
-                    it.map {
-                        it.data
-                    }
-                }
-                .subscribe({
-                    it.map {
-                        it.data
-                        Log.e("开眼列表", it.data.toString())
-                    }
-//                    Log.e("开眼列表", it.toString())
-                }, this::onError)
-    }
-
-    fun onError(err: Throwable) {
-        applicationContext.toast(err.message ?: "未知异常")
+        recyclerView.layoutManager = LinearLayoutManager(context())
     }
 
     override fun onBackPressed() {

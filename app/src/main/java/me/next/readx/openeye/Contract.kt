@@ -1,6 +1,7 @@
 package me.next.readx.openeye
 
-import android.support.v7.widget.RecyclerView
+import me.next.readx.base.BaseContentAdapter
+import me.next.readx.base.IPresenter
 
 /**
  * Created by NeXT on 17/6/1.
@@ -8,9 +9,9 @@ import android.support.v7.widget.RecyclerView
 interface Contract {
 
     interface View {
-        fun setAdapter(adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>)
+        fun setAdapter(adapter: BaseContentAdapter<*>?)
     }
 
-    interface Presenter {}
+    interface Presenter: IPresenter {}
 
 }

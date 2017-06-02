@@ -18,16 +18,5 @@ object OpenEyeService {
                         Log.e("开眼列表", it.toString())
                         it.issueList[0].itemList
                     }
-//                    .filter {
-//                        it.issueList.size > 0
-//                    }
-//                    .map {
-//                        it.issueList.get(0)
-//                    }
-//                    .onErrorResumeNext{ err: Throwable ->
-//                        val lis`t: ArrayList<OpenEyeData> = Paper.book().read("meizis-$pageNum")
-//                                ?: throw GankServiceException(err.message)
-//                        val list: listof()
-//                        Observable.just(list)
-//                    }
+
 }

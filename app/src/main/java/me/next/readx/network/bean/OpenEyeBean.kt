@@ -16,7 +16,7 @@ data class OpenEyeDataIssue(
 )
 
 data class OpenEyeDataItem(
-        val data: OpenEyeDataItem
+        val data: OpenEyeData
 )
 
 @PaperParcel data class OpenEyeData(

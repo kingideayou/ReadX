@@ -1,16 +1,19 @@
 package me.next.readx
 
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import io.reactivex.android.schedulers.AndroidSchedulers
+import me.next.readx.network.DataLayer
+import me.next.readx.network.services.OpenEyeService
+import org.jetbrains.anko.toast
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -20,12 +23,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
-        val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
-
         val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
         val toggle = ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -34,6 +31,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val navigationView = findViewById(R.id.nav_view) as NavigationView
         navigationView.setNavigationItemSelectedListener(this)
+
+        DataLayer.init()
+        OpenEyeService.getOpenEyeList()
+                .observeOn(AndroidSchedulers.mainThread())
+                .map {
+                    it.map {
+                        it.data
+                    }
+                }
+                .subscribe({
+                    it.map {
+                        it.data
+                        Log.e("开眼列表", it.data.toString())
+                    }
+//                    Log.e("开眼列表", it.toString())
+                }, this::onError)
+    }
+
+    fun onError(err: Throwable) {
+        applicationContext.toast(err.message ?: "未知异常")
     }
 
     override fun onBackPressed() {

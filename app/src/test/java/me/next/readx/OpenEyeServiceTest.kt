@@ -25,6 +25,7 @@ class OpenEyeServiceTest {
     fun testGetOpenEye() {
         val openEyeList = OpenEyeService.getOpenEyeList().blockingFirst()
         print(openEyeList)
+        print(openEyeList.size)
         Assert.assertTrue(openEyeList.isNotEmpty())
     }
 }

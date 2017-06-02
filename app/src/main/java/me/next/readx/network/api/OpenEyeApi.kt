@@ -2,7 +2,8 @@ package me.next.readx.network.api
 
 import io.reactivex.Observable
 import me.next.readx.network.DataLayer
-import me.next.readx.network.bean.OpenEyeDataResponse
+import me.next.readx.network.bean.OpenEyeDataIssue
+import me.next.readx.network.bean.Response
 import retrofit2.http.GET
 
 /**
@@ -14,6 +15,6 @@ internal interface OpenEyeApi {
         val IMPL: OpenEyeApi = DataLayer.RETROFIT_OPENEYE!!.create(OpenEyeApi::class.java)
     }
 
-    @GET("")
-    fun getOpenEyeList(): Observable<OpenEyeDataResponse>
+    @GET(".")
+    fun getOpenEyeList(): Observable<Response<OpenEyeDataIssue>>
 }
